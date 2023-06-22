@@ -32,10 +32,29 @@ jobs:
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
       - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-runtest@v1
-      - uses: julia-actions/julia-uploadcoveralls@v1
-        env:
-          COVERALLS_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      - name: "Run tests"
+          run: |
+              julia --color=yes --project=. -e 'import Pkg; Pkg.add("Coverage")'
+              julia --color=yes --threads=auto --check-bounds=yes --depwarn=yes --code-coverage=user --project=. -e 'import Pkg; Pkg.test(coverage=true)'
+              julia --color=yes --project=. coverage.jl
+          shell: bash
+      - name: "Coveralls"
+        uses: coverallsapp/github-action@v2
+        with:
+          path-to-lcov: lcov.info
+          parallel: true
+          flag-name: julia-${{ matrix.julia-version }}-${{ matrix.os }}-${{ github.event_name }}
+
+  coveralls:
+    name: Indicate completion to coveralls
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Finish
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
+
   docs:
     name: Documentation
     runs-on: ubuntu-latest
