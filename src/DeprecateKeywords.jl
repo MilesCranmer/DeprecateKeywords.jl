@@ -5,35 +5,66 @@ export @deprecate_kws
 using MacroTools
 
 """
-    @deprecate_kws(deprecations, def)
+    @deprecate_kws def
 
-Macro to deprecate keyword arguments. `deprecations` should be a tuple of
-keyword arguments to deprecate, like `(new_kw1=old_kw1, new_kw2=old_kw2)`.
-`def` should be the function definition.
+Macro to deprecate keyword arguments. Use by wrapping a function signature,
+while using `@deprecate(old_kw, new_kw)` within the function signature to deprecate.
+
+# Examples
+
+```julia
+@deprecate_kws function f(; a=2, @deprecate(b, a))
+    a
+end
+```
 """
-macro deprecate_kws(deprecations, def)
-    return esc(_deprecate_kws(deprecations, def))
+macro deprecate_kws(def)
+    return esc(_deprecate_kws(def))
 end
 
-function _deprecate_kws(deprecations, def)
-    @assert(
-        deprecations.head == :tuple,
-        "First argument to `deprecate_kws` must be passed as a tuple, like `(new_kw1=old_kw1, new_kw2=old_kw2)`"
-    )
+function _deprecate_kws(def)
     sdef = splitdef(def)
     func_symbol = Expr(:quote, sdef[:name])  # Double quote for expansion
 
-    new_symbols = [_get_symbol(k.args[1]) for k in deprecations.args]
-    deprecated_symbols = [_get_symbol(k.args[2]) for k in deprecations.args]
-    symbol_mapping = Dict(new_symbols .=> deprecated_symbols)
+    new_symbols = Symbol[]
+    deprecated_symbols = Symbol[]
+    kwargs_to_remove = Int[]
+    for (i, param) in enumerate(sdef[:kwargs])
+        isa(param, Symbol) && continue
+        # Look for @deprecated macro:
+        if param.head == :macrocall && param.args[1] == Symbol("@deprecate")
+            # e.g., params.args[2] is the line number
+            deprecated_symbol = param.args[end-1]
+            new_symbol = param.args[end]
+            if !isa(new_symbol, Symbol)
+                # Remove line numbers nodes:
+                clean_param = deepcopy(param)
+                filter!(x -> !isa(x, LineNumberNode), clean_param.args)
+                error(
+                    "The expression\n    $(clean_param)\ndoes not appear to be two symbols in a `@deprecate`. This can happen if you use `@deprecate` in a function " *
+                    "definition without " *
+                    "parentheses, such as `f(; @deprecate a b, c=2)`. Instead, you should write `f(; (@deprecate a b), c=2)` or alternatively " *
+                    "`f(; @deprecate(a, b), c=2)`.)"
+                )
+            end
+            push!(deprecated_symbols, deprecated_symbol)
+            push!(new_symbols, new_symbol)
+            push!(kwargs_to_remove, i)
+        end
+    end
+    deleteat!(sdef[:kwargs], kwargs_to_remove)
 
     # Add deprecated kws:
     for deprecated_symbol in deprecated_symbols
         pushfirst!(sdef[:kwargs], Expr(:kw, deprecated_symbol, :nothing))
     end
 
+    symbol_mapping = Dict(new_symbols .=> deprecated_symbols)
+
     # Update new symbols to use deprecated kws if passed:
     for (i, kw) in enumerate(sdef[:kwargs])
+        isa(kw, Symbol) && continue
+
         new_kw = kw.args[1]
         default = kw.args[2]
         _get_symbol(new_kw) in deprecated_symbols && continue

@@ -11,7 +11,7 @@ DeprecateKeywords defines a macro for keyword deprecation:
 ```julia
 using DeprecateKeywords
 
-@deprecate_kws (a=b, c=d) function f(;a=2, c=3)
+@deprecate_kws function f(;a=2, c=3, @deprecate(b, a), @deprecate(d, c))
     a + c
 end
 ```
