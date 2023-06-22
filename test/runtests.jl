@@ -1,5 +1,5 @@
 using Test
-using DeprecateKeyword
+using DeprecateKeywords
 
 @deprecate_kws (a=b,) function f(; a=2)
     a

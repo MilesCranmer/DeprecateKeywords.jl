@@ -1,14 +1,14 @@
 
 
-![logo](https://github.com/SymbolicML/DeprecateKeyword.jl/assets/7593028/a278d0c1-2f95-416b-ba04-82750074146b)
+![logo](https://github.com/SymbolicML/DeprecateKeywords.jl/assets/7593028/a278d0c1-2f95-416b-ba04-82750074146b)
 
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://symbolicml.org/DeprecateKeyword.jl/dev/)
-[![Build Status](https://github.com/SymbolicML/DeprecateKeyword.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/SymbolicML/DeprecateKeyword.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Coverage](https://coveralls.io/repos/github/SymbolicML/DeprecateKeyword.jl/badge.svg?branch=main)](https://coveralls.io/github/SymbolicML/DeprecateKeyword.jl?branch=main)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://symbolicml.org/DeprecateKeywords.jl/dev/)
+[![Build Status](https://github.com/SymbolicML/DeprecateKeywords.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/SymbolicML/DeprecateKeywords.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Coverage](https://coveralls.io/repos/github/SymbolicML/DeprecateKeywords.jl/badge.svg?branch=main)](https://coveralls.io/github/SymbolicML/DeprecateKeywords.jl?branch=main)
 
 
   
-DeprecateKeyword defines a simple statically-typed `Quantity` type for Julia.
+DeprecateKeywords defines a simple statically-typed `Quantity` type for Julia.
 Physical dimensions are stored as a *value*, as opposed to a parametric type, as in [Unitful.jl](https://github.com/PainterQubits/Unitful.jl).
 This is done to allow for calculations where physical dimensions are not known at compile time.
 
@@ -19,11 +19,11 @@ This is done to allow for calculations where physical dimensions are not known a
 
 ## Performance
 
-DeprecateKeyword can greatly outperform Unitful
+DeprecateKeywords can greatly outperform Unitful
 when the compiler cannot infer dimensions in a function:
 
 ```julia
-julia> using BenchmarkTools, DeprecateKeyword; import Unitful
+julia> using BenchmarkTools, DeprecateKeywords; import Unitful
 
 julia> dyn_uni = 0.2u"m^0.5 * kg * mol^3"
 0.2 m¹ᐟ² kg mol³
@@ -41,7 +41,7 @@ julia> @btime f($unitful, 1);
 ```
 
 **(Note the μ and n.)**
-Here, the DeprecateKeyword quantity object allows the compiler to build a function that is type stable,
+Here, the DeprecateKeywords quantity object allows the compiler to build a function that is type stable,
 while the Unitful quantity object, which stores its dimensions in the type, requires type inference at runtime.
 
 However, if the dimensions in your function *can* be inferred by the compiler,
@@ -149,22 +149,22 @@ julia> ustrip(x)
 
 ### Unitful
 
-DeprecateKeyword works with quantities that are exclusively
+DeprecateKeywords works with quantities that are exclusively
 represented by their SI base units. This gives us type stability
 and greatly improves performance.
 
 However, performing calculations with physical dimensions
 is actually equivalent to working with a standardized unit system.
 Thus, you can use Unitful to parse units,
-and then use the DeprecateKeyword->Unitful extension for conversion:
+and then use the DeprecateKeywords->Unitful extension for conversion:
 
 ```julia
-julia> using Unitful: Unitful, @u_str; import DeprecateKeyword
+julia> using Unitful: Unitful, @u_str; import DeprecateKeywords
 
 julia> x = 0.5u"km/s"
 0.5 km s⁻¹
 
-julia> y = convert(DeprecateKeyword.Quantity, x)
+julia> y = convert(DeprecateKeywords.Quantity, x)
 500.0 m s⁻¹
 
 julia> y2 = y^2 * 0.3
@@ -180,7 +180,7 @@ true
 ## Types
 
 Both a `Quantity`'s values and dimensions are of arbitrary type.
-By default, dimensions are stored as a `DeprecateKeyword.FixedRational{Int32,C}`
+By default, dimensions are stored as a `DeprecateKeywords.FixedRational{Int32,C}`
 object, which represents a rational number
 with a fixed denominator `C`. This is much faster than `Rational`.
 
@@ -201,7 +201,7 @@ or by conversion:
 
 ```julia
 julia> typeof(convert(Quantity{Float16}, 0.5u"m/s"))
-Quantity{Float16, DeprecateKeyword.FixedRational{Int32, 25200}}
+Quantity{Float16, DeprecateKeywords.FixedRational{Int32, 25200}}
 ```
 
 For many applications, `FixedRational{Int8,6}` will suffice,
@@ -211,11 +211,11 @@ You can change the type of the dimensions field by passing
 the type you wish to use as the second argument to `Quantity`:
 
 ```julia
-julia> using DeprecateKeyword
+julia> using DeprecateKeywords
 
-julia> R8 = DeprecateKeyword.FixedRational{Int8,6};
+julia> R8 = DeprecateKeywords.FixedRational{Int8,6};
 
-julia> R32 = DeprecateKeyword.FixedRational{Int32,2^4 * 3^2 * 5^2 * 7};  # Default
+julia> R32 = DeprecateKeywords.FixedRational{Int32,2^4 * 3^2 * 5^2 * 7};  # Default
 
 julia> q8 = [Quantity(randn(), R8, length=rand(-2:2)) for i in 1:1000];
 
@@ -237,7 +237,7 @@ like so:
 
 ```julia
 julia> randn(5) .* u"m/s"
-5-element Vector{Quantity{Float64, DeprecateKeyword.FixedRational{Int32, 25200}}}:
+5-element Vector{Quantity{Float64, DeprecateKeywords.FixedRational{Int32, 25200}}}:
  1.1762086954956399 m s⁻¹
  1.320811324040591 m s⁻¹
  0.6519033652437799 m s⁻¹
@@ -249,7 +249,7 @@ Because it is type stable, you can have mixed units in a vector too:
 
 ```julia
 julia> v = [Quantity(randn(), mass=rand(0:5), length=rand(0:5)) for _=1:5]
-5-element Vector{Quantity{Float64, DeprecateKeyword.FixedRational{Int32, 25200}}}:
+5-element Vector{Quantity{Float64, DeprecateKeywords.FixedRational{Int32, 25200}}}:
  0.4309293892461158 kg⁵
  1.415520139801276
  1.2179414706524276 m³ kg⁴

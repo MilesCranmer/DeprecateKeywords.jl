@@ -32,7 +32,7 @@ uamount
 ```
 
 ```@autodocs
-Modules = [DeprecateKeyword]
+Modules = [DeprecateKeywords]
 Pages   = ["utils.jl"]
 Filter  = t -> !(t in [ustrip, dimension, ulength, umass, utime, ucurrent, utemperature, uluminosity, uamount])
 ```
@@ -85,7 +85,7 @@ Units.bar
 ### FixedRational
 
 ```@docs
-DeprecateKeyword.FixedRational
-DeprecateKeyword.denom
+DeprecateKeywords.FixedRational
+DeprecateKeywords.denom
 ```
 

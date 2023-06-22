@@ -60,6 +60,6 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using DeprecateKeyword
-            DocMeta.setdocmeta!(DeprecateKeyword, :DocTestSetup, :(using DeprecateKeyword); recursive=true)
-            doctest(DeprecateKeyword)'
+            using DeprecateKeywords
+            DocMeta.setdocmeta!(DeprecateKeywords, :DocTestSetup, :(using DeprecateKeywords); recursive=true)
+            doctest(DeprecateKeywords)'

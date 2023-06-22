@@ -1,4 +1,4 @@
-module DeprecateKeyword
+module DeprecateKeywords
 
 export @deprecate_kws
 

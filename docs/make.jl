@@ -1,8 +1,8 @@
-using DeprecateKeyword
-import DeprecateKeyword.Units
+using DeprecateKeywords
+import DeprecateKeywords.Units
 using Documenter
 
-DocMeta.setdocmeta!(DeprecateKeyword, :DocTestSetup, :(using DeprecateKeyword); recursive=true)
+DocMeta.setdocmeta!(DeprecateKeywords, :DocTestSetup, :(using DeprecateKeywords); recursive=true)
 
 readme = open(dirname(@__FILE__) * "/../README.md") do io
     read(io, String)
@@ -27,13 +27,13 @@ open(dirname(@__FILE__) * "/src/index.md", "w") do io
 end
 
 makedocs(;
-    modules=[DeprecateKeyword, DeprecateKeyword.Units],
+    modules=[DeprecateKeywords, DeprecateKeywords.Units],
     authors="MilesCranmer <miles.cranmer@gmail.com> and contributors",
-    repo="https://github.com/SymbolicML/DeprecateKeyword.jl/blob/{commit}{path}#{line}",
-    sitename="DeprecateKeyword.jl",
+    repo="https://github.com/SymbolicML/DeprecateKeywords.jl/blob/{commit}{path}#{line}",
+    sitename="DeprecateKeywords.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://symbolicml.org/DeprecateKeyword.jl",
+        canonical="https://symbolicml.org/DeprecateKeywords.jl",
         edit_link="main",
         assets=String[]
     ),
@@ -44,6 +44,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/SymbolicML/DeprecateKeyword.jl",
+    repo="github.com/SymbolicML/DeprecateKeywords.jl",
     devbranch="main"
 )
