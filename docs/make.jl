@@ -1,5 +1,4 @@
 using DeprecateKeywords
-import DeprecateKeywords.Units
 using Documenter
 
 DocMeta.setdocmeta!(DeprecateKeywords, :DocTestSetup, :(using DeprecateKeywords); recursive=true)
@@ -27,7 +26,7 @@ open(dirname(@__FILE__) * "/src/index.md", "w") do io
 end
 
 makedocs(;
-    modules=[DeprecateKeywords, DeprecateKeywords.Units],
+    modules=[DeprecateKeywords],
     authors="MilesCranmer <miles.cranmer@gmail.com> and contributors",
     repo="https://github.com/MilesCranmer/DeprecateKeywords.jl/blob/{commit}{path}#{line}",
     sitename="DeprecateKeywords.jl",
