@@ -29,11 +29,11 @@ end
 makedocs(;
     modules=[DeprecateKeywords, DeprecateKeywords.Units],
     authors="MilesCranmer <miles.cranmer@gmail.com> and contributors",
-    repo="https://github.com/SymbolicML/DeprecateKeywords.jl/blob/{commit}{path}#{line}",
+    repo="https://github.com/MilesCranmer/DeprecateKeywords.jl/blob/{commit}{path}#{line}",
     sitename="DeprecateKeywords.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://symbolicml.org/DeprecateKeywords.jl",
+        canonical="https://astroautomata.com/DeprecateKeywords.jl",
         edit_link="master",
         assets=String[]
     ),
@@ -44,6 +44,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/SymbolicML/DeprecateKeywords.jl",
+    repo="github.com/MilesCranmer/DeprecateKeywords.jl",
     devbranch="master"
 )

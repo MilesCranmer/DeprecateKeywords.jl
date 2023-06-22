@@ -4,6 +4,13 @@ export @deprecate_kws
 
 using MacroTools
 
+"""
+    @deprecate_kws(deprecations, def)
+
+Macro to deprecate keyword arguments. `deprecations` should be a tuple of
+keyword arguments to deprecate, like `(new_kw1=old_kw1, new_kw2=old_kw2)`.
+`def` should be the function definition.
+"""
 macro deprecate_kws(deprecations, def)
     return esc(_deprecate_kws(deprecations, def))
 end
