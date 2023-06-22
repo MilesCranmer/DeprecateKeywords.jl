@@ -16,7 +16,7 @@ using DeprecateKeywords
 end
 ```
 
-With this, we can use both the old and new keywords (making sure to start with `--depwarn=yes`).
+With this, we can use both the old and new keywords.
 If using the old keyword, it will automatically be passed to the new keyword, but with a deprecation warning.
 
 ```julia
@@ -29,3 +29,5 @@ julia> f(b=1, c=2)
 └ @ Core REPL[5]:1
 3
 ```
+
+(The warning uses `depwarn`, so is only visible if one starts with `--depwarn=yes`)
