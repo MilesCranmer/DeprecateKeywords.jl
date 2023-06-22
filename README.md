@@ -11,12 +11,16 @@
 DeprecateKeywords defines a macro for keyword deprecation. For example,
 let's say we wish to deprecate the keyword `old_kw1` in favor of `new_kw1`, and
 likewise for `old_kw2`.
-`
 
 ```julia
 using DeprecateKeywords
 
-@deprecate_kws function f(; new_kw1=2, new_kw2=3, @deprecate(old_kw1, new_kw1), @deprecate(old_kw2, new_kw2))
+@deprecate_kws function foo(;
+    new_kw1=2,
+    new_kw2=3,
+    @deprecate(old_kw1, new_kw1),
+    @deprecate(old_kw2, new_kw2)
+)
     new_kw1 + new_kw2
 end
 ```
@@ -25,10 +29,10 @@ With this, we can use both the old and new keywords.
 If using the old keyword, it will automatically be passed to the new keyword, but with a deprecation warning.
 
 ```julia
-julia> f(new_kw1=1, new_kw2=2)
+julia> foo(new_kw1=1, new_kw2=2)
 3
 
-julia> f(old_kw1=1, new_kw2=2)
+julia> foo(old_kw1=1, new_kw2=2)
 ┌ Warning: Keyword argument `old_kw1` is deprecated. Use `new_kw1` instead.
 │   caller = top-level scope at REPL[5]:1
 └ @ Core REPL[5]:1
