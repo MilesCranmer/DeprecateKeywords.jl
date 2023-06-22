@@ -16,6 +16,8 @@ end
 
 @test g() === 6
 @test g(α=1, γ=3) === 4
-@test_warn "Keyword argument" (@test g(β=1, γ=3) === 4)
-@test_warn "Keyword argument" (@test g(α=1, δ=3) === 4)
-@test_warn "Keyword argument `β`" (@test g(β=1, δ=3) === 4)
+if VERSION >= v"1.8"
+    @test_warn "Keyword argument" (@test g(β=1, γ=3) === 4)
+    @test_warn "Keyword argument" (@test g(α=1, δ=3) === 4)
+    @test_warn "Keyword argument `β`" (@test g(β=1, δ=3) === 4)
+end
