@@ -1,18 +1,23 @@
 <div align="center">
 
+# DeprecateKeywords.jl
+
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://astroautomata.com/DeprecateKeywords.jl/dev/)
 [![Build Status](https://github.com/MilesCranmer/DeprecateKeywords.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/MilesCranmer/DeprecateKeywords.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 [![Coverage](https://coveralls.io/repos/github/MilesCranmer/DeprecateKeywords.jl/badge.svg?branch=master)](https://coveralls.io/github/MilesCranmer/DeprecateKeywords.jl?branch=master)
 
 </div>
   
-DeprecateKeywords defines a macro for keyword deprecation:
+DeprecateKeywords defines a macro for keyword deprecation. For example,
+let's say we wish to deprecate the keyword `old_kw1` in favor of `new_kw1`, and
+likewise for `old_kw2`.
+`
 
 ```julia
 using DeprecateKeywords
 
-@deprecate_kws (a=b, c=d) function f(;a=2, c=3)
-    a + c
+@deprecate_kws (new_kw1=old_kw1, new_kw2=old_kw2) function f(; new_kw1=2, new_kw2=3)
+    new_kw1 + new_kw2
 end
 ```
 
@@ -20,14 +25,19 @@ With this, we can use both the old and new keywords.
 If using the old keyword, it will automatically be passed to the new keyword, but with a deprecation warning.
 
 ```julia
-julia> f(a=1, c=2)
+julia> f(new_kw1=1, new_kw2=2)
 3
 
-julia> f(b=1, c=2)
-┌ Warning: Keyword argument `b` is deprecated. Use `a` instead.
+julia> f(old_kw1=1, new_kw2=2)
+┌ Warning: Keyword argument `old_kw1` is deprecated. Use `new_kw1` instead.
 │   caller = top-level scope at REPL[5]:1
 └ @ Core REPL[5]:1
 3
 ```
 
 (The warning uses `depwarn`, so is only visible if one starts with `--depwarn=yes`)
+
+
+## Missing features
+
+- Check for both kwargs being set (right now it silently takes the new kw)
