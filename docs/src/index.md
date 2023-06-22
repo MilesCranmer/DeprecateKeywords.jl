@@ -3,8 +3,8 @@
 ![logo](https://github.com/SymbolicML/DeprecateKeywords.jl/assets/7593028/a278d0c1-2f95-416b-ba04-82750074146b)
 
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://symbolicml.org/DeprecateKeywords.jl/dev/)
-[![Build Status](https://github.com/SymbolicML/DeprecateKeywords.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/SymbolicML/DeprecateKeywords.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Coverage](https://coveralls.io/repos/github/SymbolicML/DeprecateKeywords.jl/badge.svg?branch=main)](https://coveralls.io/github/SymbolicML/DeprecateKeywords.jl?branch=main)
+[![Build Status](https://github.com/SymbolicML/DeprecateKeywords.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/SymbolicML/DeprecateKeywords.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Coverage](https://coveralls.io/repos/github/SymbolicML/DeprecateKeywords.jl/badge.svg?branch=master)](https://coveralls.io/github/SymbolicML/DeprecateKeywords.jl?branch=master)
 
 
   

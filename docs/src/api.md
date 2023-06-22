@@ -9,7 +9,7 @@ Dimensions
 
 ## Utilities
 
-The two main general utilities for working
+The two master general utilities for working
 with quantities are `ustrip` and `dimension`:
 
 ```@docs
@@ -39,7 +39,7 @@ Filter  = t -> !(t in [ustrip, dimension, ulength, umass, utime, ucurrent, utemp
 
 ## Units
 
-The two main functions for working with units are `uparse` and `u_str`:
+The two master functions for working with units are `uparse` and `u_str`:
 
 ```@docs
 @u_str

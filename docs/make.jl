@@ -34,7 +34,7 @@ makedocs(;
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://symbolicml.org/DeprecateKeywords.jl",
-        edit_link="main",
+        edit_link="master",
         assets=String[]
     ),
     pages=[
@@ -45,5 +45,5 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/SymbolicML/DeprecateKeywords.jl",
-    devbranch="main"
+    devbranch="master"
 )

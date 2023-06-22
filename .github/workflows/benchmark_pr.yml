@@ -3,7 +3,7 @@ name: Benchmark a pull request
 on:
   pull_request_target:
     branches:
-      - main
+      - master
 
 permissions:
   pull-requests: write
