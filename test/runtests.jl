@@ -21,3 +21,8 @@ if VERSION >= v"1.8"
     @test_warn "Keyword argument" (@test g(α=1, δ=3) === 4)
     @test_warn "Keyword argument `β`" (@test g(β=1, δ=3) === 4)
 end
+
+@deprecate_kws (new_kw=old_kw,) h(; new_kw::Int=3) = new_kw
+@test h() === 3
+@test h(new_kw=1) === 1
+VERSION >= v"1.8" && @test_warn "Keyword argument" (@test h(old_kw=1) === 1)
