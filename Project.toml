@@ -1,7 +1,7 @@
 name = "DeprecateKeywords"
 uuid = "83f0f1bf-2a81-4f2a-8178-033dcab3e60b"
 authors = ["MilesCranmer <miles.cranmer@gmail.com> and contributors"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
