@@ -16,12 +16,16 @@ using DeprecateKeywords
 end
 ```
 
-With this, we can use both the old and new keywords (making sure to start with `--depwarn=yes`)
+With this, we can use both the old and new keywords (making sure to start with `--depwarn=yes`).
+If using the old keyword, it will automatically be passed to the new keyword, but with a deprecation warning.
 
 ```julia
 julia> f(a=1, c=2)
 3
 
-julia> f(b=1, d=2)
+julia> f(b=1, c=2)
+┌ Warning: Keyword argument `b` is deprecated. Use `a` instead.
+│   caller = top-level scope at REPL[5]:1
+└ @ Core REPL[5]:1
 3
 ```
