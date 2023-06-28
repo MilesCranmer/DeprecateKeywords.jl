@@ -15,7 +15,7 @@ likewise for `old_kw2`.
 ```julia
 using DeprecateKeywords
 
-@deprecate_kws function foo(;
+@depkws function foo(;
     new_kw1=2,
     new_kw2=3,
     @deprecate(old_kw1, new_kw1),
