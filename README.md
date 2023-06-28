@@ -44,4 +44,4 @@ julia> foo(old_kw1=1, new_kw2=2)
 
 ## Missing features
 
-- Check for both kwargs being set (right now it silently takes the new kw)
+- Check for both kwargs being set (right now it silently takes the new kw). Although this might not be possible/robust.
