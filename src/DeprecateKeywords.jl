@@ -22,6 +22,8 @@ macro depkws(def)
     return esc(_depkws(def))
 end
 
+abstract type DeprecatedDefault end
+
 function _depkws(def)
     sdef = splitdef(def)
     func_symbol = Expr(:quote, sdef[:name])  # Double quote for expansion
@@ -56,7 +58,7 @@ function _depkws(def)
 
     # Add deprecated kws:
     for deprecated_symbol in deprecated_symbols
-        pushfirst!(sdef[:kwargs], Expr(:kw, deprecated_symbol, :nothing))
+        pushfirst!(sdef[:kwargs], Expr(:kw, deprecated_symbol, DeprecatedDefault))
     end
 
     symbol_mapping = Dict(new_symbols .=> deprecated_symbols)
@@ -72,7 +74,7 @@ function _depkws(def)
         deprecated_symbol = symbol_mapping[_get_symbol(new_kw)]
         depwarn_string = "Keyword argument `$(deprecated_symbol)` is deprecated. Use `$(_get_symbol(new_kw))` instead."
         new_kwcall = quote
-            if $deprecated_symbol !== nothing
+            if $deprecated_symbol !== $(DeprecatedDefault)
                 Base.depwarn($depwarn_string, $func_symbol)
                 $deprecated_symbol
             else

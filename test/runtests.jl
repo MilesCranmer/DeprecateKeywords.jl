@@ -9,7 +9,7 @@ using DeprecateKeywords
     @test f(a=1) === 1
     VERSION >= v"1.8" && @test_warn "Keyword argument `b` is deprecated. Use `a` instead." (@test f(b=1) == 1)
 
-    @test_broken f(b=nothing) === nothing
+    @test f(b=nothing) === nothing
 end
 
 @testset "Multi-param" begin
