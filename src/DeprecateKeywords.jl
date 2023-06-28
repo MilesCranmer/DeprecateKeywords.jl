@@ -1,11 +1,11 @@
 module DeprecateKeywords
 
-export @deprecate_kws
+export @depkws
 
 using MacroTools
 
 """
-    @deprecate_kws def
+    @depkws def
 
 Macro to deprecate keyword arguments. Use by wrapping a function signature,
 while using `@deprecate(old_kw, new_kw)` within the function signature to deprecate.
@@ -13,16 +13,16 @@ while using `@deprecate(old_kw, new_kw)` within the function signature to deprec
 # Examples
 
 ```julia
-@deprecate_kws function f(; a=2, @deprecate(b, a))
+@depkws function f(; a=2, @deprecate(b, a))
     a
 end
 ```
 """
-macro deprecate_kws(def)
-    return esc(_deprecate_kws(def))
+macro depkws(def)
+    return esc(_depkws(def))
 end
 
-function _deprecate_kws(def)
+function _depkws(def)
     sdef = splitdef(def)
     func_symbol = Expr(:quote, sdef[:name])  # Double quote for expansion
 

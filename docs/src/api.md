@@ -1,5 +1,5 @@
 # Usage
 
 ```@docs
-@deprecate_kws
+@depkws
 ```
