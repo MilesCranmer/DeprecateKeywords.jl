@@ -8,7 +8,7 @@
 
 </div>
   
-[DeprecateKeywords.jl](https://github.com/MilesCranmer/DeprecateKeywords.jl) is tiny package (77 lines) which defines a macro for keyword deprecation. 
+[DeprecateKeywords.jl](https://github.com/MilesCranmer/DeprecateKeywords.jl) is a tiny package (77 lines) which defines a macro for keyword deprecation. 
 
 While normally you can use `Base.@deprecate` for deprecating functions and *arguments*, because multiple dispatch does not apply to keywords, you actually need a separate macro for using at the original function signature.
 
