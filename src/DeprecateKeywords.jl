@@ -65,7 +65,7 @@ function _depkws(def)
 
     # Update new symbols to use deprecated kws if passed:
     for (i, kw) in enumerate(sdef[:kwargs])
-        no_default = isa(kw, Symbol) || kw.head != :kw
+        no_default = isa(kw, Symbol)
         new_kw, default = if no_default
             (kw, DeprecatedDefault)
         else
@@ -73,6 +73,17 @@ function _depkws(def)
         end
         _get_symbol(new_kw) in deprecated_symbols && continue
         !(_get_symbol(new_kw) in new_symbols) && continue
+
+        if !no_default
+            if kw.head != :kw
+                error(
+                    "The formatting of the keyword: `$(kw)` is not supported by `@depkws`. "
+                    * "If a keyword does not have a default, you cannot assert the type in the signature. "
+                    * "Instead, you should assert types in the body."
+                )
+            end
+        end
+
         deprecated_symbol = symbol_mapping[_get_symbol(new_kw)]
         depwarn_string = "Keyword argument `$(deprecated_symbol)` is deprecated. Use `$(_get_symbol(new_kw))` instead."
         new_kwcall = quote

@@ -34,12 +34,20 @@ end
 end
 
 @testset "Error catching" begin
-    VERSION >= v"1.8" && @test_throws LoadError (@eval @depkws k(; @deprecate a b, b = 10) = b)
+    if VERSION >= v"1.8"
+        # Incorrect scope:
+        @test_throws LoadError (@eval @depkws k(; @deprecate a b, b = 10) = b)
+        # Can't use type assertion if no default is set:
+        @test_throws LoadError (@eval @depkws y(; a::Int, (@deprecate b a)) = a)
+    end
+    # But, we shouldn't interfere with regular kwargs:
+    @depkws y2(; a::Int) = a
+    @test y2(a=1) == 1
 end
 
 @testset "No default set" begin
     @depkws k(x; (@deprecate a b), b) = x + b
-    @test_throws UndefKeywordError k(1.0)
+    VERSION >= v"1.8" && @test_throws UndefKeywordError k(1.0)
     VERSION >= v"1.8" && @test_warn "Keyword argument" (@test k(1.0; a=2.0) == 3.0)
     @test k(1.0; b=2.0) == 3.0
 end
