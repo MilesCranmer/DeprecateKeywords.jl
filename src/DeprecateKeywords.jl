@@ -112,7 +112,7 @@ function _depkws(def)
             pushfirst!(
                 sdef[:body].args,
                 Expr(:if,
-                    Expr(:call, :(==), _get_symbol(new_kw), DeprecatedDefault),
+                    Expr(:call, :(===), _get_symbol(new_kw), DeprecatedDefault),
                     Expr(:call, :throw,
                         Expr(:call, :UndefKeywordError, QuoteNode(_get_symbol(new_kw)))
                     )
