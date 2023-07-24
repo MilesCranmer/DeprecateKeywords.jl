@@ -37,10 +37,17 @@ end
     if VERSION >= v"1.8"
         # Incorrect scope:
         @test_throws LoadError (@eval @depkws k(; @deprecate a b, b = 10) = b)
-        # Can't use type assertion if no default is set:
-        @test_throws LoadError (@eval @depkws y(; a::Int, (@deprecate b a)) = a)
     end
-    # But, we shouldn't interfere with regular kwargs:
+
+    # Use type assertion with no default set:
+    @depkws y(; a::Int, (@deprecate b a)) = a
+
+    @test y(a=1) == 1
+    VERSION >= v"1.8" && @test_warn "Keyword argument" (@test y(b=1) == 1)
+    # Type assertion should still work:
+    @test_throws TypeError y(a=1.0)
+
+    # We shouldn't interfere with regular kwargs:
     @depkws y2(; a::Int) = a
     @test y2(a=1) == 1
 end
