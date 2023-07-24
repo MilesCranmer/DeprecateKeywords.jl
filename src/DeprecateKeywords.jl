@@ -65,10 +65,12 @@ function _depkws(def)
 
     # Update new symbols to use deprecated kws if passed:
     for (i, kw) in enumerate(sdef[:kwargs])
-        isa(kw, Symbol) && continue
-
-        new_kw = kw.args[1]
-        default = kw.args[2]
+        no_default = isa(kw, Symbol)
+        new_kw, default = if no_default
+            (kw, DeprecatedDefault)
+        else
+            (kw.args[1], kw.args[2])
+        end
         _get_symbol(new_kw) in deprecated_symbols && continue
         !(_get_symbol(new_kw) in new_symbols) && continue
         deprecated_symbol = symbol_mapping[_get_symbol(new_kw)]
@@ -82,6 +84,19 @@ function _depkws(def)
             end
         end
         sdef[:kwargs][i] = Expr(:kw, new_kw, new_kwcall)
+
+        if no_default
+            # Propagate UndefKeywordError
+            pushfirst!(
+                sdef[:body].args,
+                Expr(:if,
+                    Expr(:call, :(==), _get_symbol(new_kw), DeprecatedDefault),
+                    Expr(:call, :throw,
+                        Expr(:call, :UndefKeywordError, QuoteNode(_get_symbol(new_kw)))
+                    )
+                )
+            )
+        end
     end
 
     return combinedef(sdef)

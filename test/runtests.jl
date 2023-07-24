@@ -36,3 +36,10 @@ end
 @testset "Error catching" begin
     VERSION >= v"1.8" && @test_throws LoadError (@eval @depkws k(; @deprecate a b, b = 10) = b)
 end
+
+@testset "No default set" begin
+    @depkws k(x; (@deprecate a b), b) = x + b
+    @test_throws UndefKeywordError k(1.0)
+    VERSION >= v"1.8" && @test_warn "Keyword argument" (@test k(1.0; a=2.0) == 3.0)
+    @test k(1.0; b=2.0) == 3.0
+end
