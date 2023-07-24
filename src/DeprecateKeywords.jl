@@ -65,7 +65,7 @@ function _depkws(def)
 
     # Update new symbols to use deprecated kws if passed:
     for (i, kw) in enumerate(sdef[:kwargs])
-        no_default = isa(kw, Symbol)
+        no_default = isa(kw, Symbol) || kw.head != :kw
         new_kw, default = if no_default
             (kw, DeprecatedDefault)
         else
