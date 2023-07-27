@@ -65,12 +65,29 @@ function _depkws(def)
 
     # Update new symbols to use deprecated kws if passed:
     for (i, kw) in enumerate(sdef[:kwargs])
-        isa(kw, Symbol) && continue
+        no_default_type_assertion = !isa(kw, Symbol) && kw.head != :kw
+        no_default_naked = isa(kw, Symbol)
+        no_default = no_default_naked || no_default_type_assertion
 
-        new_kw = kw.args[1]
-        default = kw.args[2]
+        (kw, type_assertion) = if no_default_type_assertion
+            @assert kw.head == :(::)
+            # Remove type assertion from keyword; we will
+            # assert it later.
+            kw.args
+        else
+            (kw, Nothing)
+        end
+
+        new_kw, default = if no_default
+            (kw, DeprecatedDefault)
+        else
+            (kw.args[1], kw.args[2])
+        end
+
+
         _get_symbol(new_kw) in deprecated_symbols && continue
         !(_get_symbol(new_kw) in new_symbols) && continue
+
         deprecated_symbol = symbol_mapping[_get_symbol(new_kw)]
         depwarn_string = "Keyword argument `$(deprecated_symbol)` is deprecated. Use `$(_get_symbol(new_kw))` instead."
         new_kwcall = quote
@@ -82,6 +99,26 @@ function _depkws(def)
             end
         end
         sdef[:kwargs][i] = Expr(:kw, new_kw, new_kwcall)
+
+        if no_default_type_assertion
+            pushfirst!(
+                sdef[:body].args,
+                Expr(:(::), _get_symbol(new_kw), type_assertion)
+            )
+        end
+
+        if no_default
+            # Propagate UndefKeywordError
+            pushfirst!(
+                sdef[:body].args,
+                Expr(:if,
+                    Expr(:call, :(===), _get_symbol(new_kw), DeprecatedDefault),
+                    Expr(:call, :throw,
+                        Expr(:call, :UndefKeywordError, QuoteNode(_get_symbol(new_kw)))
+                    )
+                )
+            )
+        end
     end
 
     return combinedef(sdef)
